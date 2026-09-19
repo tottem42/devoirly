@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Devoirly",
   "short_name": "Devoirly",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Transforme les devoirs Educartable en événements Google Calendar dans le calendrier choisi par l’utilisateur.",
   "minimum_chrome_version": "105",
   "permissions": [

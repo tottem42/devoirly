@@ -213,6 +213,17 @@ function setDisconnectedUi() {
   isGoogleConnected=false; existingByKey=new Map(); calendarArea.classList.add("hidden"); connectGoogleButton.classList.remove("hidden"); disconnectGoogleButton.classList.add("hidden"); googleStatus.textContent="Non connecté."; calendarSelect.disabled=true; refreshSyncBadges(); updateButtonState();
 }
 
+function deterministicEventId(item) {
+  // Google Calendar allows custom IDs using base32hex characters (0-9, a-v).
+  // Two independent 32-bit hashes keep the ID stable and make collisions extremely unlikely.
+  const source = item.sourceKey || item.id || `${item.date.iso}|${item.title}`;
+  return `d${simpleHash(`devoirly|${source}`)}${simpleHash(`${source}|calendar`)}`;
+}
+
+function expectedSummary(item) {
+  return `📚 Devoirs – pour ${formatDate(item.date.iso)}`;
+}
+
 async function fetchExistingEvents() {
   if (!items.length || !calendarSelect.value) return new Map();
   const {dayOffset}=settings();
@@ -220,14 +231,22 @@ async function fetchExistingEvents() {
   const minIso=addDays(eventDates[0],-3), maxIso=addDays(eventDates[eventDates.length-1],3);
   const params=new URLSearchParams({
     singleEvents:"true", maxResults:"2500", showDeleted:"false",
-    timeMin:rfc3339Boundary(minIso), timeMax:rfc3339Boundary(maxIso,true),
-    sharedExtendedProperty:"devoirlyApp=devoirly"
+    timeMin:rfc3339Boundary(minIso), timeMax:rfc3339Boundary(maxIso,true)
   });
   const data=await googleFetch(`/calendars/${encodeURIComponent(calendarSelect.value)}/events?${params.toString()}`,{},false);
   const map=new Map();
+  const keyBySummary=new Map(items.map(item=>[expectedSummary(item),stableKey(item)]));
+
   for (const event of (data.items||[])) {
-    const key=event?.extendedProperties?.shared?.devoirlyKey;
+    // Preferred lookup: events created by Devoirly 3.1+ carry a stable key.
+    let key=event?.extendedProperties?.shared?.devoirlyKey;
+
+    // Migration/fallback for events created by an older build where extended
+    // properties were missing or not returned as expected. Only adopt events
+    // whose summary exactly matches Devoirly's own generated title.
+    if (!key && keyBySummary.has(event.summary)) key=keyBySummary.get(event.summary);
     if (!key) continue;
+
     if (!map.has(key)) map.set(key,[]);
     map.get(key).push(event);
   }
@@ -279,8 +298,25 @@ async function syncGoogle() {
 
     const group={item,homework,index}, body=eventBody(group), expected=body.extendedProperties.shared.devoirlyFingerprint;
     if (!existing.length) {
-      await googleFetch(`/calendars/${encodeURIComponent(calendarId)}/events`,{method:"POST",body:JSON.stringify(body)},true);
-      created++;
+      // Use a deterministic Google Calendar event ID. Even if a future lookup
+      // fails, inserting the same homework day cannot silently create another
+      // event with a different random ID.
+      body.id=deterministicEventId(item);
+      try {
+        await googleFetch(`/calendars/${encodeURIComponent(calendarId)}/events`,{method:"POST",body:JSON.stringify(body)},true);
+        created++;
+      } catch (error) {
+        // 409 means the deterministic event already exists. Adopt and update it
+        // instead of creating a duplicate.
+        if (!String(error.message||error).includes("Google Calendar : 409")) throw error;
+        const current=await googleFetch(`/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(body.id)}`,{},true);
+        const same=current?.extendedProperties?.shared?.devoirlyFingerprint===expected;
+        if (same) unchanged++;
+        else {
+          await googleFetch(`/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(body.id)}`,{method:"PATCH",body:JSON.stringify(eventBody(group))},true);
+          updated++;
+        }
+      }
     } else {
       const primary=existing[0];
       const same=primary?.extendedProperties?.shared?.devoirlyFingerprint===expected;

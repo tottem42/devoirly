@@ -1,4 +1,4 @@
-# Devoirly 3.2
+# Devoirly 3.3
 
 **Les devoirs dans l'agenda, simplement.**
 
@@ -64,3 +64,8 @@ Devoirly n'execute aucun code JavaScript ou WebAssembly distant.
 ## Statut du projet
 
 Devoirly est un projet independant et n'est ni edite, ni sponsorise, ni affilie a Educartable ou Google.
+
+
+## Correction 3.3 — synchronisation sans doublons
+
+La synchronisation Google utilise désormais un identifiant d'événement déterministe par journée de devoirs. Une modification de la sélection des lignes met donc à jour l'événement existant au lieu d'en créer un nouveau. La version 3.3 sait également reconnaître et reprendre les événements Devoirly créés par les versions précédentes à partir de leur titre, puis supprimer les doublons éventuels lors de la synchronisation.
