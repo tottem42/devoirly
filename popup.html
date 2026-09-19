@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Devoirly</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<main>
+  <header class="brand">
+    <img src="icons/icon48.png" width="42" height="42" alt="">
+    <div><h1>Devoirly <small>3.1</small></h1><p>Les devoirs dans l’agenda, simplement.</p></div>
+  </header>
+
+  <section class="settings-panel">
+    <div class="settings-grid">
+      <label><span>Planifier</span><select id="dayOffset"><option value="-1">La veille</option><option value="0">Le jour du devoir</option><option value="-2">2 jours avant</option></select></label>
+      <label><span>Début</span><input id="startTime" type="time" value="18:00"></label>
+      <label><span>Fin</span><input id="endTime" type="time" value="19:00"></label>
+    </div>
+  </section>
+
+  <section class="share-box">
+    <div class="account-head">
+      <div><strong>Compte Google</strong><p id="googleStatus">Non connecté.</p></div>
+      <button id="disconnectGoogle" class="link-button hidden" type="button">Déconnexion</button>
+    </div>
+    <button id="connectGoogle" class="google-button" type="button">Se connecter avec Google</button>
+    <div id="calendarArea" class="hidden">
+      <label class="calendar-label"><span>Calendrier familial</span><select id="calendarSelect" disabled><option>Chargement…</option></select></label>
+      <p class="hint">Choisis un calendrier Google partagé : les événements y seront visibles par les personnes avec lesquelles ce calendrier est partagé.</p>
+    </div>
+  </section>
+
+  <div id="syncInfo" class="sync-info hidden"></div>
+  <div id="status" class="status">Lecture des devoirs…</div>
+  <section id="list" class="list" aria-live="polite"></section>
+
+  <footer>
+    <button id="selectAll" class="secondary" type="button">Tout sélectionner</button>
+    <div class="actions">
+      <button id="exportIcs" class="secondary" type="button" disabled>Exporter .ics</button>
+      <button id="syncGoogle" class="primary" type="button" disabled>Synchroniser Google</button>
+    </div>
+  </footer>
+</main>
+<script src="popup.js"></script>
+</body>
+</html>
