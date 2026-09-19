@@ -1,71 +1,201 @@
-# Devoirly 3.3
+<div align="center">
 
-**Les devoirs dans l'agenda, simplement.**
+<img src="assets/devoirly-logo-120.png" alt="Logo Devoirly" width="96">
 
-Devoirly est une extension Chrome qui lit les devoirs affiches sur Educartable et permet aux parents de les synchroniser dans Google Calendar.
+# Devoirly
 
-## Fonctionnalites
+### Les devoirs dans l’agenda, simplement.
 
-- lecture des devoirs affiches sur Educartable ;
-- selection ligne par ligne, utile pour les classes a double niveau ;
-- planification automatique la veille ;
-- horaire configurable, 18 h - 19 h par defaut ;
-- connexion Google via OAuth ;
-- choix d'un calendrier Google modifiable, y compris un calendrier familial partage ;
-- synchronisation idempotente pour eviter les doublons ;
-- mise a jour et suppression des evenements Devoirly si la selection change ;
-- export `.ics` en solution de secours.
+Transformez les devoirs affichés dans **Educartable** en événements **Google Calendar**, avec sélection ligne par ligne, planification la veille et synchronisation dans un calendrier familial partagé.
 
-## Installation locale
+<br>
 
-1. Clonez ou telechargez ce depot.
-2. Ouvrez `chrome://extensions`.
-3. Activez **Mode developpeur**.
-4. Cliquez sur **Charger l'extension non empaquetee**.
-5. Selectionnez la racine de ce depot.
+<img src="assets/devoirly-hero-1400x560.png" alt="Devoirly" width="100%">
 
-La lecture Educartable fonctionne immediatement. L'integration Google Calendar necessite un Client ID OAuth valide : voir `PUBLICATION_GOOGLE.md`.
+</div>
 
-## Utilisation
+---
 
-1. Ouvrez Educartable et affichez la page **Devoirs**.
-2. Ouvrez Devoirly.
-3. Cochez ou decochez les lignes utiles.
-4. Connectez votre compte Google.
-5. Choisissez le calendrier cible.
+## Pourquoi Devoirly ?
+
+Les devoirs sont souvent indiqués pour **le jour où ils doivent être prêts**, alors que les familles doivent s’organiser avant.
+
+Devoirly facilite ce passage entre le cahier de textes et l’agenda familial :
+
+- 📚 récupère les devoirs affichés dans Educartable ;
+- ☑️ permet de sélectionner ou désélectionner chaque ligne ;
+- 🧩 convient aux classes à double niveau ;
+- ⏰ planifie les devoirs **la veille**, par défaut de **18h à 19h** ;
+- 📅 synchronise directement avec **Google Calendar** ;
+- 👨‍👩‍👧 fonctionne avec un calendrier familial partagé ;
+- 🔄 met à jour l’événement existant au lieu de créer des doublons.
+
+---
+
+## Aperçu
+
+<div align="center">
+
+<img src="assets/devoirly-screenshot-1280x800.png" alt="Aperçu de Devoirly" width="900">
+
+</div>
+
+---
+
+## Comment ça marche ?
+
+1. Ouvrez **Educartable** et rendez-vous sur la page **Devoirs**.
+2. Ouvrez l’extension **Devoirly**.
+3. Connectez votre compte Google.
+4. Choisissez le calendrier à utiliser.
+5. Sélectionnez uniquement les devoirs utiles.
 6. Cliquez sur **Synchroniser Google**.
 
-Un devoir prevu pour le mardi est place par defaut le lundi de 18:00 a 19:00. Ces reglages sont modifiables.
+### Exemple
 
-## Confidentialite
+Si Educartable indique un devoir pour **mardi**, Devoirly peut créer l’événement :
 
-Devoirly ne possede pas de serveur intermediaire. Les devoirs lus sur Educartable restent dans le navigateur et ne sont envoyes a Google Calendar que lorsque l'utilisateur declenche la synchronisation.
+> **Lundi — 18h00 à 19h00**  
+> 📚 Devoirs pour mardi  
+> • dictée 4  
+> • français : leçon 11  
+> • maths : leçon 7  
 
-La politique de confidentialite publique se trouve dans `docs/index.html` et peut etre publiee avec GitHub Pages.
+Si vous modifiez ensuite votre sélection, Devoirly met à jour **le même événement**.
 
-## Permissions Chrome
+---
 
-La version 3.2 utilise uniquement les permissions necessaires a sa fonction principale :
+## Calendrier familial partagé
 
-- `storage` pour conserver les preferences locales ;
-- `identity` pour l'authentification OAuth Google ;
-- acces aux pages Educartable necessaires au content script ;
-- acces a l'API Google Calendar.
+Devoirly peut écrire dans tout calendrier Google pour lequel vous avez les droits nécessaires.
 
-Devoirly n'execute aucun code JavaScript ou WebAssembly distant.
+Une configuration pratique consiste à créer un calendrier :
 
-## Publication
+> **Devoirs**
 
-- `GITHUB_SETUP.md` : mise en ligne du projet et GitHub Pages ;
-- `PUBLICATION_GOOGLE.md` : configuration OAuth Google ;
-- `STORE_PRIVACY_FORM.md` : aide pour le formulaire de confidentialite du Chrome Web Store ;
-- `PRIVACY.md` : version Markdown de la politique de confidentialite.
+puis à le partager avec l’autre parent.
 
-## Statut du projet
+Les deux parents voient alors automatiquement les mêmes événements dans Google Calendar.
 
-Devoirly est un projet independant et n'est ni edite, ni sponsorise, ni affilie a Educartable ou Google.
+---
 
+## Confidentialité
 
-## Correction 3.3 — synchronisation sans doublons
+Devoirly est conçu pour limiter les accès au strict nécessaire :
 
-La synchronisation Google utilise désormais un identifiant d'événement déterministe par journée de devoirs. Une modification de la sélection des lignes met donc à jour l'événement existant au lieu d'en créer un nouveau. La version 3.3 sait également reconnaître et reprendre les événements Devoirly créés par les versions précédentes à partir de leur titre, puis supprimer les doublons éventuels lors de la synchronisation.
+- les devoirs sont lus depuis la page Educartable déjà ouverte ;
+- Devoirly ne demande pas votre mot de passe Educartable ;
+- les préférences sont enregistrées localement dans Chrome ;
+- les événements sélectionnés sont envoyés à Google Calendar uniquement lorsque vous lancez une synchronisation ;
+- Devoirly ne vend pas les données utilisateur ;
+- aucune donnée n’est utilisée à des fins publicitaires.
+
+👉 Consultez la [politique de confidentialité](PRIVACY.md).
+
+---
+
+## Permissions
+
+| Permission | Utilisation |
+|---|---|
+| `storage` | Enregistrer localement les réglages Devoirly |
+| `identity` | Connexion OAuth au compte Google |
+| Accès Educartable | Lire les devoirs affichés sur la page |
+| Google Calendar | Lire la liste des calendriers et synchroniser les événements |
+
+---
+
+## Installation en développement
+
+Clonez le dépôt :
+
+```bash
+git clone https://github.com/VOTRE-UTILISATEUR/devoirly.git
+cd devoirly
+```
+
+Puis :
+
+1. Ouvrez `chrome://extensions`
+2. Activez **Mode développeur**
+3. Cliquez sur **Charger l’extension non empaquetée**
+4. Sélectionnez le dossier du projet
+5. Rechargez l’onglet Educartable après chaque rechargement de l’extension
+
+> ℹ️ Pour OAuth en développement local, l’ID Chrome de l’extension peut différer de celui du Chrome Web Store. Un client OAuth de développement séparé peut donc être nécessaire.
+
+---
+
+## Google OAuth
+
+Devoirly utilise Google OAuth 2.0 et Google Calendar API.
+
+La version destinée au Chrome Web Store doit utiliser un Client ID OAuth de type **Extension Chrome** associé à l’ID définitif de l’extension publiée.
+
+Ne publiez jamais dans le dépôt :
+
+- `client_secret`
+- token OAuth
+- mot de passe
+- clé privée
+
+Le **Client ID OAuth** d’une extension Chrome est, lui, public par conception.
+
+---
+
+## Version actuelle
+
+### Devoirly 3.3
+
+Principales améliorations :
+
+- synchronisation Google Calendar stable ;
+- mise à jour d’un événement existant ;
+- réduction des doublons ;
+- sélection ligne par ligne ;
+- OAuth Google ;
+- calendrier partagé ;
+- planification configurable.
+
+---
+
+## Roadmap
+
+Quelques pistes pour les prochaines versions :
+
+- détection automatique des changements Educartable ;
+- meilleure gestion des devoirs supprimés ou déplacés ;
+- support d’autres plateformes scolaires ;
+- options avancées de titre et de description ;
+- publication et mises à jour via le Chrome Web Store.
+
+---
+
+## Chrome Web Store
+
+Devoirly est actuellement en préparation pour sa première publication publique.
+
+<!-- Une fois publiée, remplacer la ligne ci-dessous par le lien officiel du Chrome Web Store. -->
+
+**Bientôt disponible sur le Chrome Web Store.**
+
+---
+
+## Contributions
+
+Les retours, rapports de bugs et idées d’amélioration sont les bienvenus via les **Issues GitHub**.
+
+---
+
+## Indépendance
+
+Devoirly est un projet indépendant. Il n’est ni édité, ni sponsorisé, ni affilié à **Educartable**, **Edumoov** ou **Google**.
+
+---
+
+<div align="center">
+
+**Devoirly**  
+*Les devoirs dans l’agenda, simplement.*
+
+</div>
