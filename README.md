@@ -110,7 +110,7 @@ Devoirly est conçu pour limiter les accès au strict nécessaire :
 Clonez le dépôt :
 
 ```bash
-git clone https://github.com/VOTRE-UTILISATEUR/devoirly.git
+git clone https://github.com/tottem42/devoirly.git
 cd devoirly
 ```
 
@@ -161,11 +161,10 @@ Principales améliorations :
 
 ## Roadmap
 
-Quelques pistes pour les prochaines versions :
+Pistes pour les prochaines versions :
 
 - détection automatique des changements Educartable ;
 - meilleure gestion des devoirs supprimés ou déplacés ;
-- support d’autres plateformes scolaires ;
 - options avancées de titre et de description ;
 - publication et mises à jour via le Chrome Web Store.
 
