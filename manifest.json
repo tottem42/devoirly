@@ -14,7 +14,7 @@
     "https://www.googleapis.com/calendar/*"
   ],
   "oauth2": {
-    "client_id": "REMPLACEZ_PAR_VOTRE_CLIENT_ID.apps.googleusercontent.com",
+    "client_id": "139819627304-bqdrbua9f2fh67q4rs60v57m99uk8inl.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/calendar.events",
       "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
